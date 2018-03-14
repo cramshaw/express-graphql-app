@@ -1,0 +1,23 @@
+{
+  "name": "apollo-server",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Chris Ramshaw",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "express": "^4.16.2",
+    "graphql": "^0.13.1",
+    "graphql-server-express": "^1.3.2",
+    "graphql-tools": "^2.21.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1"
+  },
+  "scripts": {
+    "start": "nodemon src/index.js --exec babel-node",
+    "build": "babel src -d lib"
+  }
+}
