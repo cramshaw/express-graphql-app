@@ -1,0 +1,29 @@
+version: '2'
+services:
+  server:
+    build: .
+    command: yarn start
+    volumes:
+      - .:/usr/src/app/
+      - /usr/app/node_modules
+    ports:
+      - "4000:4000"
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    ports:
+        - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+networks:
+  default:
+    driver: bridge
+    driver_opts:
+      com.docker.network.driver.mtu: 1350
+    ipam:
+      config:
+        - subnet: 192.168.6.0/24

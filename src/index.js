@@ -5,6 +5,7 @@ import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import { makeExecutableSchema } from 'graphql-tools'
 import resolvers from './resolvers'
 
+
 // The GraphQL schema in string form
 const typeDefs = `
   type Query {
