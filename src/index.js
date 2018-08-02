@@ -41,7 +41,7 @@ const typeDefs = `
 const schema = "Hello World";
 
 // Connection String
-const url = 'mongodb://mongodb:27017';
+const url = `mongodb://${process.env.MONGO_HOST || 'localhost'}:27017`;
 // Database Name
 const dbName = 'test';
 // Use connect method to connect to the server

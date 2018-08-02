@@ -8,6 +8,8 @@ services:
       - /usr/app/node_modules
     ports:
       - "4000:4000"
+    environment:
+      - MONGO_HOST=mongodb
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
