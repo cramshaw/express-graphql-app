@@ -1,6 +1,10 @@
 import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
+
+import { createServer } from 'http';
+
+
 // import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
 import { ApolloServer, gql } from 'apollo-server-express'
 // import { makeExecutableSchema } from 'graphql-tools'
@@ -20,6 +24,14 @@ const typeDefs = `
     user: User
   }
 
+  type inserted {
+    insertedCount: Int
+  }
+
+  type Subscription {
+    loadComplete: String
+  }
+
   type User {
     username: String,
     password: String,
@@ -30,6 +42,7 @@ const typeDefs = `
   type Mutation {
     login(username: String!, password: String!): User
     easyLogin(username: String!): User
+    loadData(user: String!, status: Int!): inserted
   }
 `
 // Put together a schema
@@ -45,7 +58,7 @@ const url = `mongodb://${process.env.MONGO_HOST || 'localhost'}:27017`;
 // Database Name
 const dbName = 'test';
 // Use connect method to connect to the server
-const client = MongoClient.connect(url)
+const client = MongoClient.connect(url, { useNewUrlParser: true })
 
 // Apollo Server
 const server = new ApolloServer({
@@ -64,33 +77,36 @@ const app = express()
 
 server.applyMiddleware({ app });
 
+const httpServer = createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
 // app.use(cors())
 
-app.use(function (req, res, next) {
-  console.log(req.ip + ' ' + req.url)
-  next()
-})
+// app.use(function (req, res, next) {
+//   console.log(req.ip + ' ' + req.url)
+//   next()
+// })
 
-// // The GraphQL endpoint
-// app.use('/graphql',
-//   bodyParser.json(),
-//   graphqlExpress({
-//     schema
-//   }))
+// // // The GraphQL endpoint
+// // app.use('/graphql',
+// //   bodyParser.json(),
+// //   graphqlExpress({
+// //     schema
+// //   }))
 
-// // GraphiQL, a visual editor for queries
-// app.use('/graphiql',
-//   graphiqlExpress({
-//     endpointURL: '/graphql'
-//   }))
+// // // GraphiQL, a visual editor for queries
+// // app.use('/graphiql',
+// //   graphiqlExpress({
+// //     endpointURL: '/graphql'
+// //   }))
 
-app.use('/', (req, res, next) => {
-  res.send(schema)
-})
+// app.use('/', (req, res, next) => {
+//   res.send(schema)
+// })
 
 // Start the server
-app.listen(4000, () => {
-  console.log('Go to http://localhost:4000/graphiql to run queries!')
+httpServer.listen(4000, () => {
+  // console.log('Go to http://localhost:4000/graphiql to run queries!')
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
 
 })
