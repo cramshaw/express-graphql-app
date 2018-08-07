@@ -50,7 +50,9 @@ const resolvers = {
       // pubsub.publish(LOAD_COMPLETE, { "user": args.user, "status": args.status } );
       pubsub.publish(LOAD_COMPLETE,
         {
-          loadComplete : `user ${i}`
+          loadComplete : {
+            username: `user 1`
+          }
         }
       );
       return context.db.collection(MONGO_COLLECTION).insert( { "user": args.user, "status": args.status } )
@@ -62,7 +64,9 @@ var i = 1;
 setInterval(() => {
   pubsub.publish(LOAD_COMPLETE,
     {
-      loadComplete : `user ${i}`
+      loadComplete : {
+        username: `user ${i}`
+      }
     }
   );
   i++;
